@@ -141,12 +141,29 @@ if uploaded_file:
             # ==========================
             if mc_fix == 1:
 
-                if valid_count > 0:
+                if valid_count == 1:
 
-                    highest_idx = max(valid_idx,
-                                      key=lambda i: df.loc[i, cont_col])
-
+                    highest_idx = valid_idx[0]
                     df.loc[highest_idx, "ALLOC"] = 1
+
+                elif valid_count == 2:
+
+                    # get top 2 by CONT%
+                    sorted_valid = sorted(valid_idx,
+                                        key=lambda i: df.loc[i, cont_col],
+                                        reverse=True)
+
+                    df.loc[sorted_valid[0], "ALLOC"] = 0.5
+                    df.loc[sorted_valid[1], "ALLOC"] = 0.5
+
+                elif valid_count > 2:
+
+                    sorted_valid = sorted(valid_idx,
+                                        key=lambda i: df.loc[i, cont_col],
+                                        reverse=True)
+
+                    df.loc[sorted_valid[0], "ALLOC"] = 0.5
+                    df.loc[sorted_valid[1], "ALLOC"] = 0.5
 
             # ==========================
             # RULE 2: MC_FIX > 1
